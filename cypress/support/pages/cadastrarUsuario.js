@@ -28,4 +28,21 @@ export class CadastroUsuario {
   apertarCadastrar() {
     cy.get(this.buttonCadastrar).eq(1).click();
   }
+
+  typeSenhaDeConfirmação() {
+    let senha = faker.internet.password(6);
+    cy.get(this.inputConfirmarSenha).type(senha);
+  }
+
+  typeSenhaPrincipal() {
+    let senha = faker.internet.password(6);
+    cy.get(this.inputSenha).type(senha);
+  }
+
+  typeSenha12Caracteres() {
+    let senha = faker.internet.password(12);
+    cy.get(this.inputSenha).type(senha);
+    cy.get(this.inputConfirmarSenha).type(senha);
+    return senha;
+  }
 }
