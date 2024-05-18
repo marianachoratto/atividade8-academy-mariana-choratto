@@ -23,3 +23,42 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add(
+  "deletarUsuario",
+  (email, password, idNovoUsuario, token) => {
+    const apiUrl = "https://raromdb-3c39614e42d4.herokuapp.com/";
+
+    return cy
+      .request({
+        method: "POST",
+        url: apiUrl + "api/auth/login",
+        body: {
+          email: email,
+          password: password,
+        },
+      })
+      .then(function (resposta) {
+        token = resposta.body.accessToken;
+        cy.log(token);
+
+        cy.request({
+          method: "PATCH",
+          url: apiUrl + "api/users/admin",
+          auth: {
+            bearer: token,
+          },
+        });
+      })
+      .then(function (resposta) {
+        cy.log(token);
+        cy.request({
+          method: "DELETE",
+          url: apiUrl + `api/users/${idNovoUsuario}`,
+          auth: {
+            bearer: token,
+          },
+        });
+      });
+  }
+);
