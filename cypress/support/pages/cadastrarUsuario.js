@@ -6,6 +6,7 @@ export class CadastroUsuario {
   inputSenha = '[name="password"]';
   inputConfirmarSenha = '[name="confirmPassword"]';
   buttonCadastrar = '[type="submit"]';
+  inputError = ".input-error";
 
   typeNome() {
     let nome = "faker " + faker.person.firstName();
