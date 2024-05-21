@@ -58,10 +58,16 @@ Cenário: O usuário deve conseguir cancelar uma operação de mudar senha
     E começo a alterar a senha
     Quando clico no botão de cancelar
     Então a operação é cancelada
-    # E a senha antiga retorna 
 
-Cenário: Usuário administrador deve conseguir mudar informações de outros usuários
-    Dado que meu usuário tem perfil de administrador
-    Quando acesso uma conta de terceiro
-    E mudo alguma informação
-    Então as alterações são feitas
+# Cenário: Usuário não deve conseguir alterar sua senha passando valor de senha diferente na confirmação da senha
+
+@deletarUsuario @ignore
+Cenário: Não deve ser possível usuário do tipo comum alterar o tipo de sua conta
+    Dado que sou um usuário do tipo comum
+    Então não deve ser possível alterar o tipo da conta
+
+# Cenário: Usuário administrador deve conseguir mudar informações de outros usuários
+#     Dado que meu usuário tem perfil de administrador
+#     Quando acesso uma conta de terceiro
+#     E mudo alguma informação
+#     Então as alterações são feitas

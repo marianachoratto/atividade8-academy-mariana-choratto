@@ -10,6 +10,7 @@ export class ContaUsuario {
   buttonAlterarSenha = ".account-password-button";
   inputError = ".input-error";
   buttonCacelar = ".account-password-button-cancel";
+  tipoUsuario = '[name="type"]';
 
   typeNome() {
     let nome = "faker " + faker.person.firstName();

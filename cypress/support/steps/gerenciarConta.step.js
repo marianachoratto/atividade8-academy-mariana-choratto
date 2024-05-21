@@ -121,4 +121,25 @@ Then("a operação é cancelada", function () {
   cy.get(pgConta.inputSenha).should("be.disabled");
 });
 
-Given("que meu usuário tem perfil de administrador", function () {});
+Given("que meu usuário tem perfil de administrador", function () {
+  cy.tornarAdmin(email, password);
+
+  cy.visit("login");
+  login.escreverEmail(email);
+  login.escreverSenha(password);
+  login.apertarLogin();
+  cy.wait("@getInfoUsuario");
+
+  cy.visit("account");
+});
+
+Given("que sou um usuário do tipo comum", function () {
+  cy.get(pgConta.tipoUsuario);
+  cy.contains("option", "Comum").should("exist");
+});
+
+Then("não deve ser possível alterar o tipo da conta", function () {
+  // cy.contains("option", "Comum")
+
+  cy.get(pgConta.tipoUsuario).should("be.disabled");
+});

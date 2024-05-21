@@ -87,3 +87,26 @@ Cypress.Commands.add("cadastrarUsuario", () => {
       });
     });
 });
+
+Cypress.Commands.add("tornarAdmin", (email, password) => {
+  return cy
+    .request({
+      method: "POST",
+      url: apiUrl + "api/auth/login",
+      body: {
+        email: email,
+        password: password,
+      },
+    })
+    .then(function (resposta) {
+      token = resposta.body.accessToken;
+
+      cy.request({
+        method: "PATCH",
+        url: apiUrl + "api/users/admin",
+        auth: {
+          bearer: token,
+        },
+      });
+    });
+});
