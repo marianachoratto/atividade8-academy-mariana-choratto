@@ -15,7 +15,7 @@ let email;
 let password;
 let idNovoUsuario;
 
-After({ tags: "@deletarUsuario" }, function () {
+After(function () {
   cy.deletarUsuario(email, password, idNovoUsuario);
 });
 
@@ -104,7 +104,6 @@ When("coloco o email errado", function () {
 Then("deve aparecer uma mensagem informando falha ao autenticar", function () {
   cy.wait("@logar").then(function (resposta) {
     let objeto = resposta.response;
-    // Bug
     expect(objeto.statusCode).to.equal(401);
     expect(objeto.body.error).to.equal("Unauthorized");
     expect(objeto.body.message).to.equal("Invalid username or password.");
@@ -115,4 +114,18 @@ Then("deve aparecer uma mensagem informando falha ao autenticar", function () {
 
 When("coloco a senha errada", function () {
   login.escreverSenhaAutomatico();
+});
+
+When("faço um login com senha ou email incorretos", function () {
+  login.escreverEmail(email);
+  login.escreverSenhaAutomatico();
+  login.apertarLogin();
+});
+
+When("clico no botão de Ok", function () {
+  cy.get(login.buttonOk).eq(2).click();
+});
+
+Then("a janela de alerta fecha", function () {
+  cy.get(login.divAlerta).should("not.exist");
 });

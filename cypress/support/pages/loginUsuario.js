@@ -4,6 +4,8 @@ export class LoginUsuario {
   inputEmail = '[name="email"]';
   inputSenha = '[name="password"]';
   buttonLogin = ".login-button";
+  buttonOk = "button";
+  divAlerta = ".modal-overlay";
 
   apertarLogin() {
     cy.get(this.buttonLogin).click();
