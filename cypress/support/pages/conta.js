@@ -6,7 +6,10 @@ export class ContaUsuario {
   buttonSalvar = ".account-save-button";
   inputSenha = '[name="password"]';
   inputConfirmarSenha = '[name="confirmPassword"]';
+  inputEmail = '[name="email"]';
   buttonAlterarSenha = ".account-password-button";
+  inputError = ".input-error";
+  buttonCacelar = ".account-password-button-cancel";
 
   typeNome() {
     let nome = "faker " + faker.person.firstName();

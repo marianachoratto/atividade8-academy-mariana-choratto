@@ -67,3 +67,58 @@ When("clico no botão de alterar senha", function () {
 When("altero a senha cadastrada", function () {
   novaSenha = pgConta.typeSenhas();
 });
+
+When("tento alterar o email cadastrado", function () {});
+
+Then("não é possível alterá-lo", function () {
+  cy.get(pgConta.inputEmail).should("be.disabled");
+});
+
+When("tento alterar minha senha sem clicar no botão", function () {});
+
+Then("não é possível alterá-la", function () {
+  cy.get(pgConta.inputSenha).should("be.disabled");
+});
+
+When("altero a senha cadastrada para que tenha 13 caracteres", function () {
+  cy.get(pgConta.inputSenha).clear();
+  cy.get(pgConta.inputSenha).type("1234567890112");
+  cy.get(pgConta.inputConfirmarSenha).clear();
+  cy.get(pgConta.inputConfirmarSenha).type("1234567890112");
+});
+
+Then("a senha não é alterada", function () {
+  cy.contains("h3", "Ocorreu um erro");
+  cy.contains("p", "Não foi possível atualizar os dados.");
+});
+
+When("altero a senha cadastrada para que ela tenha 5 caracteres", function () {
+  cy.get(pgConta.inputSenha).clear();
+  cy.get(pgConta.inputSenha).type("12345");
+  cy.get(pgConta.inputConfirmarSenha).clear();
+  cy.get(pgConta.inputConfirmarSenha).type("12345");
+});
+
+Then(
+  "aparece uma mensagem embaixo dos inputs de senha {string}",
+  function (mensagem) {
+    cy.contains("span", mensagem).should("exist");
+
+    expect(pgConta.inputError).to.have.length.at.least(2);
+  }
+);
+
+When("começo a alterar a senha", function () {
+  cy.get(pgConta.inputSenha).clear();
+  cy.get(pgConta.inputSenha).type("12345");
+});
+
+When("clico no botão de cancelar", function () {
+  cy.get(pgConta.buttonCacelar).click();
+});
+
+Then("a operação é cancelada", function () {
+  cy.get(pgConta.inputSenha).should("be.disabled");
+});
+
+Given("que meu usuário tem perfil de administrador", function () {});
