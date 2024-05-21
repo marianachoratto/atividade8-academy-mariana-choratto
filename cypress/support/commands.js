@@ -23,10 +23,14 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import { faker } from "@faker-js/faker";
+const apiUrl = "https://raromdb-3c39614e42d4.herokuapp.com/";
+let email;
+let password = faker.internet.password(6);
+let idNovoUsuario;
+let nome;
 
 Cypress.Commands.add("deletarUsuario", (email, password, idNovoUsuario) => {
-  const apiUrl = "https://raromdb-3c39614e42d4.herokuapp.com/";
-
   return cy
     .request({
       method: "POST",
@@ -54,6 +58,32 @@ Cypress.Commands.add("deletarUsuario", (email, password, idNovoUsuario) => {
         auth: {
           bearer: token,
         },
+      });
+    });
+});
+
+Cypress.Commands.add("cadastrarUsuario", () => {
+  return cy
+    .request({
+      method: "POST",
+      url: apiUrl + "api/users",
+      body: {
+        name: "faker " + faker.person.firstName(),
+        email: faker.internet.email(),
+        password: password,
+      },
+    })
+    .then(function (resposta) {
+      idNovoUsuario = resposta.body.id;
+
+      nome = resposta.body.name;
+      email = resposta.body.email;
+
+      return cy.wrap({
+        nome: nome,
+        email: email,
+        id: idNovoUsuario,
+        password: password,
       });
     });
 });

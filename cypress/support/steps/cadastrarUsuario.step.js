@@ -57,14 +57,11 @@ Then("meu cadastro é criado com sucesso", function () {
 });
 
 When("informo um email que já foi utilizado", function () {
-  cy.log(emailJaCadastrado);
-
   cy.get(cadastro.inputEmail).type(emailJaCadastrado);
 });
 
 Given("que criei um usuário válido", function () {
   emailJaCadastrado = faker.internet.email();
-  cy.log(emailJaCadastrado);
 
   cy.request({
     method: "POST",
@@ -164,7 +161,6 @@ Then("meu usuário cadastrado é do tipo 0", function () {
     objeto = resposta;
     idNovoUsuario = resposta.response.body.id;
     email = resposta.response.body.email;
-    cy.log(objeto);
 
     expect(resposta.response.body.active).to.equal(true);
     expect(resposta.response.body.type).to.equal(0);
