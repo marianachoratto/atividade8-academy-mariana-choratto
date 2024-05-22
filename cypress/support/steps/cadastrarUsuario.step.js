@@ -11,8 +11,9 @@ let cadastro = new CadastroUsuario();
 let idNovoUsuario;
 let email;
 let password;
-let token;
 let emailJaCadastrado;
+let nomeCadastrado;
+let emailCadastrado;
 const apiUrl = "https://raromdb-3c39614e42d4.herokuapp.com/";
 
 After({ tags: "@deletarUsuario" }, function () {
@@ -29,16 +30,32 @@ Given("que acessei a funcionalidade de cadastro", function () {
 });
 
 When("informo um nome válido", function () {
-  cadastro.typeNome();
+  nomeCadastrado = cadastro.typeNome();
 });
 
 When("informo um email válido", function () {
-  cadastro.typeEmail();
+  emailCadastrado = cadastro.typeEmail();
 });
 
 When("informo uma senha válida", function () {
   password = cadastro.typeSenha();
   cadastro.apertarCadastrar();
+});
+
+Then("meu cadastro é criado com sucesso!", function () {
+  cy.wait("@criarUsuario").then(function (resposta) {
+    let objeto = resposta.response;
+    idNovoUsuario = resposta.response.body.id;
+    email = resposta.response.body.email;
+
+    expect(objeto.body.active).to.equal(true);
+    expect(objeto.body.type).to.equal(0);
+    expect(objeto.body.name).to.equal(nomeCadastrado);
+    expect(objeto.body.email).to.equal(emailCadastrado);
+
+    cy.contains("Sucesso").should("be.visible");
+    cy.contains("Cadastro realizado!").should("be.visible");
+  });
 });
 
 Then("meu cadastro é criado com sucesso", function () {

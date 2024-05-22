@@ -131,18 +131,6 @@ Then("a operação é cancelada", function () {
   cy.get(pgConta.inputSenha).should("be.disabled");
 });
 
-Given("que meu usuário tem perfil de administrador", function () {
-  cy.tornarAdmin(email, password);
-
-  cy.visit("login");
-  login.escreverEmail(email);
-  login.escreverSenha(password);
-  login.apertarLogin();
-  cy.wait("@getInfoUsuario");
-
-  cy.visit("account");
-});
-
 Given("que sou um usuário do tipo comum", function () {
   cy.get(pgConta.tipoUsuario);
   cy.contains("option", "Comum").should("exist");
@@ -199,13 +187,16 @@ When("apago as senhas cadastradas", function () {
 });
 
 When("entro na página de perfil do usuário", function () {
-  cy.get(pgConta.anchorPerfil).click();
   cy.intercept("GET", "api/users/review/all", {
     statusCode: 200,
     fixture: "filmes.json",
   }).as("filmesAdicionados");
+  cy.get(pgConta.anchorPerfil).click();
+  cy.wait("@filmesAdicionados");
 });
 
 Then("vejo os filmes que já avaliei", function () {
-  cy.wait("@filmesAdicionados");
+  cy.contains("Harry Potter").should("exist");
+  cy.contains("Anatomia de uma Queda").should("exist");
+  cy.contains("Openheimer").should("exist");
 });

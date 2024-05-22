@@ -10,13 +10,14 @@ export class CadastroUsuario {
 
   typeNome() {
     let nome = "faker " + faker.person.firstName();
-
     cy.get(this.inputName).type(nome);
+    return nome;
   }
 
   typeEmail() {
     let email = faker.internet.email();
     cy.get(this.inputEmail).type(email);
+    return email;
   }
 
   typeEmailMaiusculo() {
