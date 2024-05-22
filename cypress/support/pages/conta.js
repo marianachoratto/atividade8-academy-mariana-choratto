@@ -2,15 +2,17 @@ import { faker } from "@faker-js/faker";
 
 export class ContaUsuario {
   anchorPerfil = '[href="/profile"]';
+  anchorLogout = '[href="/logout"]';
   inputName = '[name="name"]';
-  buttonSalvar = ".account-save-button";
   inputSenha = '[name="password"]';
   inputConfirmarSenha = '[name="confirmPassword"]';
   inputEmail = '[name="email"]';
-  buttonAlterarSenha = ".account-password-button";
   inputError = ".input-error";
+  buttonAlterarSenha = ".account-password-button";
+  buttonSalvar = ".account-save-button";
   buttonCacelar = ".account-password-button-cancel";
   tipoUsuario = '[name="type"]';
+  usuarioComum = '[value="0"]';
 
   typeNome() {
     let nome = "faker " + faker.person.firstName();

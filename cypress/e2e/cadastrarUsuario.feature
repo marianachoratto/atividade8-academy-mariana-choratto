@@ -5,7 +5,7 @@ Funcionalidade: Cadastrar usuários
 Contexto: O usuário deve ter acessado a página de cadastro
     Dado que acessei a funcionalidade de cadastro
 
-@deletarUsuario
+@deletarUsuario @ignore
 Cenário: cadastrar usuário com sucesso 
     Quando informo um nome válido
     E informo um email válido
@@ -119,3 +119,10 @@ Esquema do Cenário: Não deve ser possível cadastrar com emails inválidos
     |email@gmail  |
     |@gmail       |
     |@gmail.com   |
+
+@deletarUsuario
+Cenário: Deve ser possível cadastrar um usuário com email de letras maiúsculas 
+    Quando informo um nome válido
+    E informo um email com letras maiúsculas
+    E informo uma senha válida
+    Então meu cadastro é criado com sucesso

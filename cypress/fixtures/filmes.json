@@ -1,0 +1,26 @@
+[
+  {
+    "id": 15,
+    "movieId": 55,
+    "movieTitle": "Harry Potter",
+    "score": 5,
+    "reviewText": "Melhor filme de todos os tempos",
+    "reviewType": 0
+  },
+  {
+    "id": 35,
+    "movieId": 375,
+    "movieTitle": "Anatomia de uma Queda",
+    "score": 4,
+    "reviewText": "A atriz merecia o Oscar",
+    "reviewType": 0
+  },
+  {
+    "id": 88,
+    "movieId": 25,
+    "movieTitle": "Openheimer",
+    "score": 3,
+    "reviewText": "Filme muito grande",
+    "reviewType": 0
+  }
+]

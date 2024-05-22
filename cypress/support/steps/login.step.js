@@ -6,8 +6,6 @@ import {
   Before,
 } from "@badeball/cypress-cucumber-preprocessor";
 import { LoginUsuario } from "../pages/loginUsuario";
-
-const apiUrl = "https://raromdb-3c39614e42d4.herokuapp.com/";
 let login = new LoginUsuario();
 
 let nome;
@@ -31,8 +29,6 @@ Then("tenho acesso aos dados de um usuário cadastrado", function () {
     nome = resposta.nome;
     email = resposta.email;
     password = resposta.password;
-
-    cy.log(idNovoUsuario);
 
     cy.intercept("GET", `api/users/${idNovoUsuario}`).as("getInfoUsuario");
   });
@@ -129,3 +125,22 @@ When("clico no botão de Ok", function () {
 Then("a janela de alerta fecha", function () {
   cy.get(login.divAlerta).should("not.exist");
 });
+
+When("coloco o email em letras maiúsculas", function () {
+  login.escreverEmail(email);
+});
+
+Then(
+  "tenho acesso aos dados de um usuário cadastrado com email em letra maiúscula",
+  function () {
+    cy.intercept("POST", "api/auth/login").as("logar");
+    cy.cadastrarUsuarioEmMaiusculo().then(function (resposta) {
+      idNovoUsuario = resposta.id;
+      nome = resposta.nome;
+      email = resposta.email;
+      password = resposta.password;
+
+      cy.intercept("GET", `api/users/${idNovoUsuario}`).as("getInfoUsuario");
+    });
+  }
+);

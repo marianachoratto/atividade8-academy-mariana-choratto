@@ -88,6 +88,32 @@ Cypress.Commands.add("cadastrarUsuario", () => {
     });
 });
 
+Cypress.Commands.add("cadastrarUsuarioEmMaiusculo", () => {
+  return cy
+    .request({
+      method: "POST",
+      url: apiUrl + "api/users",
+      body: {
+        name: "faker " + faker.person.firstName(),
+        email: faker.internet.email().toLocaleUpperCase(),
+        password: password,
+      },
+    })
+    .then(function (resposta) {
+      idNovoUsuario = resposta.body.id;
+
+      nome = resposta.body.name;
+      email = resposta.body.email;
+
+      return cy.wrap({
+        nome: nome,
+        email: email,
+        id: idNovoUsuario,
+        password: password,
+      });
+    });
+});
+
 Cypress.Commands.add("tornarAdmin", (email, password) => {
   return cy
     .request({

@@ -42,9 +42,8 @@ When("informo uma senha válida", function () {
 });
 
 Then("meu cadastro é criado com sucesso", function () {
-  let objeto;
   cy.wait("@criarUsuario").then(function (resposta) {
-    objeto = resposta.response;
+    let objeto = resposta.response;
     idNovoUsuario = resposta.response.body.id;
     email = resposta.response.body.email;
 
@@ -198,3 +197,7 @@ Then(
     });
   }
 );
+
+When("informo um email com letras maiúsculas", function () {
+  cadastro.typeEmailMaiusculo();
+});

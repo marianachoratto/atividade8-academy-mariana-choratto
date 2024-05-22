@@ -6,11 +6,16 @@ Contexto: o usuário deve ter acesso à sua página de informações
     Dado que entrei no perfil do meu usuário já cadastrado
     E estou na página do gerenciamento de contas
 
+@ignore
+Cenário: As informações do usuário devem estar corretas na seção de gerenciar conta
+    Então o nome cadastrado deve estar correto
+    E o email deve estar correto
+    E o usuário deve ser do tipo comum
+
 @deletarUsuario @ignore
 Cenário: Dever ser possível alterar nome
     Quando altero o nome cadastrado
     E confirmo a operação 
-    # Então terei um novo nome cadastrado
     Então terei minhas informações atualizadas
 
 @deletarUsuarioModificado @ignore
@@ -59,15 +64,43 @@ Cenário: O usuário deve conseguir cancelar uma operação de mudar senha
     Quando clico no botão de cancelar
     Então a operação é cancelada
 
-# Cenário: Usuário não deve conseguir alterar sua senha passando valor de senha diferente na confirmação da senha
+@deletarUsuario @ignore
+Cenário: Não deve ser possível o usuário alterar senha passando um valor diferente no input de confirmação
+    Quando clico no botão de alterar senha
+    E passo um valor para senha
+    E passo outro valor para a senha de confirmação
+    E confirmo a operação
+    Então aparece a mensagem 'As senhas devem ser iguais.'
+
+@ignore
+Cenário: Não deve ser possível alterar informações sem passar a senha
+    Quando altero o nome cadastrado
+    E clico no botão de alterar senha
+    Quando apago as senhas cadastradas
+    E confirmo a operação
+    Então aparece a mensagem 'Campo obrigatório'
+    Então aparece a mensagem 'As senhas devem ser iguais.'
+
 
 @deletarUsuario @ignore
-Cenário: Não deve ser possível usuário do tipo comum alterar o tipo de sua conta
+Cenário: Não deve ser possível usuário comum alterar o tipo de sua conta
     Dado que sou um usuário do tipo comum
     Então não deve ser possível alterar o tipo da conta
 
-# Cenário: Usuário administrador deve conseguir mudar informações de outros usuários
-#     Dado que meu usuário tem perfil de administrador
-#     Quando acesso uma conta de terceiro
-#     E mudo alguma informação
-#     Então as alterações são feitas
+@deletarUsuario @ignore
+Cenário: Usuário não deve conseguir atualizar seu nome sem passar um valor de nome
+    Quando apago o valor nome
+    E confirmo a operação
+    Então abaixo do input nome aparece a mensagem 'Informe o nome'
+
+@deletarUsuario @ignore
+Cenário: Apenas um usuário logado pode acessar a seção de alterar informações de um usuário
+    Quando volto à página de perfil
+    E aperto logout
+    Então sou direcionado para a página inicial
+    E não há mais o link para o perfil do usuário
+
+@deletarUsuario
+Cenário: Na página de perfil o usuário consegue ver os filmes cadastrados
+    Quando entro na página de perfil do usuário
+    Então vejo os filmes que já avaliei

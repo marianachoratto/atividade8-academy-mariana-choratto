@@ -19,6 +19,11 @@ export class CadastroUsuario {
     cy.get(this.inputEmail).type(email);
   }
 
+  typeEmailMaiusculo() {
+    let email = faker.internet.email().toUpperCase();
+    cy.get(this.inputEmail).type(email);
+  }
+
   typeSenha() {
     let senha = faker.internet.password(6);
     cy.get(this.inputSenha).type(senha);
