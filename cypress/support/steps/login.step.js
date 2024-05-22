@@ -3,7 +3,6 @@ import {
   When,
   Then,
   After,
-  Before,
 } from "@badeball/cypress-cucumber-preprocessor";
 import { LoginUsuario } from "../pages/loginUsuario";
 let login = new LoginUsuario();
@@ -17,8 +16,66 @@ After(function () {
   cy.deletarUsuario(email, password, idNovoUsuario);
 });
 
-Then("que acessei a página de login", function () {
+Given("que acessei a página de login", function () {
   cy.visit("login");
+});
+
+Given(
+  "tenho acesso aos dados de um usuário cadastrado com email em letra maiúscula",
+  function () {
+    cy.intercept("POST", "api/auth/login").as("logar");
+    cy.cadastrarUsuarioEmMaiusculo().then(function (resposta) {
+      idNovoUsuario = resposta.id;
+      nome = resposta.nome;
+      email = resposta.email;
+      password = resposta.password;
+
+      cy.intercept("GET", `api/users/${idNovoUsuario}`).as("getInfoUsuario");
+    });
+  }
+);
+
+When("coloco os dados do usuário nos inputs de login e senha", function () {
+  login.escreverEmail(email);
+  login.escreverSenha(password);
+});
+
+When("confirmo a operação", function () {
+  login.apertarLogin();
+});
+
+When("não coloco o email", function () {});
+
+When("coloco a senha", function () {
+  login.escreverSenha(password);
+});
+
+When("coloco o email", function () {
+  login.escreverEmail(email);
+});
+
+When("não coloco a senha", function () {});
+
+When("coloco o email errado", function () {
+  login.escreverEmailAutomatico();
+});
+
+When("coloco a senha errada", function () {
+  login.escreverSenhaAutomatico();
+});
+
+When("faço um login com senha ou email incorretos", function () {
+  login.escreverEmail(email);
+  login.escreverSenhaAutomatico();
+  login.apertarLogin();
+});
+
+When("clico no botão de Ok", function () {
+  cy.get(login.buttonOk).eq(2).click();
+});
+
+When("coloco o email em letras maiúsculas", function () {
+  login.escreverEmail(email);
 });
 
 Then("tenho acesso aos dados de um usuário cadastrado", function () {
@@ -32,15 +89,6 @@ Then("tenho acesso aos dados de um usuário cadastrado", function () {
 
     cy.intercept("GET", `api/users/${idNovoUsuario}`).as("getInfoUsuario");
   });
-});
-
-When("coloco os dados do usuário nos inputs de login e senha", function () {
-  login.escreverEmail(email);
-  login.escreverSenha(password);
-});
-
-When("confirmo a operação", function () {
-  login.apertarLogin();
 });
 
 Then("o login deve ser realizado com suceso", function () {
@@ -67,12 +115,6 @@ Then("o login deve ser realizado com suceso", function () {
   });
 });
 
-When("não coloco o email", function () {});
-
-When("coloco a senha", function () {
-  login.escreverSenha(password);
-});
-
 Then(
   "deve aparecer uma mensagem abaixo do input email dizendo {string}",
   function (mensagem) {
@@ -80,22 +122,12 @@ Then(
   }
 );
 
-When("coloco o email", function () {
-  login.escreverEmail(email);
-});
-
-When("não coloco a senha", function () {});
-
 Then(
   "deve aparecer uma mensagem abaixo do input senha dizendo {string}",
   function (mensagem) {
     cy.contains("span", mensagem).should("exist");
   }
 );
-
-When("coloco o email errado", function () {
-  login.escreverEmailAutomatico();
-});
 
 Then("deve aparecer uma mensagem informando falha ao autenticar", function () {
   cy.wait("@logar").then(function (resposta) {
@@ -108,39 +140,6 @@ Then("deve aparecer uma mensagem informando falha ao autenticar", function () {
   });
 });
 
-When("coloco a senha errada", function () {
-  login.escreverSenhaAutomatico();
-});
-
-When("faço um login com senha ou email incorretos", function () {
-  login.escreverEmail(email);
-  login.escreverSenhaAutomatico();
-  login.apertarLogin();
-});
-
-When("clico no botão de Ok", function () {
-  cy.get(login.buttonOk).eq(2).click();
-});
-
 Then("a janela de alerta fecha", function () {
   cy.get(login.divAlerta).should("not.exist");
 });
-
-When("coloco o email em letras maiúsculas", function () {
-  login.escreverEmail(email);
-});
-
-Then(
-  "tenho acesso aos dados de um usuário cadastrado com email em letra maiúscula",
-  function () {
-    cy.intercept("POST", "api/auth/login").as("logar");
-    cy.cadastrarUsuarioEmMaiusculo().then(function (resposta) {
-      idNovoUsuario = resposta.id;
-      nome = resposta.nome;
-      email = resposta.email;
-      password = resposta.password;
-
-      cy.intercept("GET", `api/users/${idNovoUsuario}`).as("getInfoUsuario");
-    });
-  }
-);

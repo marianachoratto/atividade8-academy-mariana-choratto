@@ -3,7 +3,6 @@ import {
   When,
   Then,
   After,
-  Before,
 } from "@badeball/cypress-cucumber-preprocessor";
 import { CadastroUsuario } from "../pages/cadastrarUsuario";
 import { faker } from "@faker-js/faker";
@@ -29,53 +28,6 @@ Given("que acessei a funcionalidade de cadastro", function () {
   cy.intercept("POST", "/api/users").as("criarUsuario");
 });
 
-When("informo um nome válido", function () {
-  nomeCadastrado = cadastro.typeNome();
-});
-
-When("informo um email válido", function () {
-  emailCadastrado = cadastro.typeEmail();
-});
-
-When("informo uma senha válida", function () {
-  password = cadastro.typeSenha();
-  cadastro.apertarCadastrar();
-});
-
-Then("meu cadastro é criado com sucesso!", function () {
-  cy.wait("@criarUsuario").then(function (resposta) {
-    let objeto = resposta.response;
-    idNovoUsuario = resposta.response.body.id;
-    email = resposta.response.body.email;
-
-    expect(objeto.body.active).to.equal(true);
-    expect(objeto.body.type).to.equal(0);
-    expect(objeto.body.name).to.equal(nomeCadastrado);
-    expect(objeto.body.email).to.equal(emailCadastrado);
-
-    cy.contains("Sucesso").should("be.visible");
-    cy.contains("Cadastro realizado!").should("be.visible");
-  });
-});
-
-Then("meu cadastro é criado com sucesso", function () {
-  cy.wait("@criarUsuario").then(function (resposta) {
-    let objeto = resposta.response;
-    idNovoUsuario = resposta.response.body.id;
-    email = resposta.response.body.email;
-
-    expect(objeto.body.active).to.equal(true);
-    expect(objeto.body.type).to.equal(0);
-
-    cy.contains("Sucesso").should("be.visible");
-    cy.contains("Cadastro realizado!").should("be.visible");
-  });
-});
-
-When("informo um email que já foi utilizado", function () {
-  cy.get(cadastro.inputEmail).type(emailJaCadastrado);
-});
-
 Given("que criei um usuário válido", function () {
   emailJaCadastrado = faker.internet.email();
 
@@ -92,26 +44,26 @@ Given("que criei um usuário válido", function () {
   });
 });
 
-Then("meu cadastro não é criado", function () {
-  cy.wait("@criarUsuario").then(function () {
-    cy.contains("Falha no cadastro.").should("be.visible");
-    cy.contains("E-mail já cadastrado. Utilize outro e-mail").should(
-      "be.visible"
-    );
-  });
+When("informo um nome válido", function () {
+  nomeCadastrado = cadastro.typeNome();
+});
+
+When("informo um email válido", function () {
+  emailCadastrado = cadastro.typeEmail();
+});
+
+When("informo uma senha válida", function () {
+  password = cadastro.typeSenha();
+  cadastro.apertarCadastrar();
+});
+
+When("informo um email que já foi utilizado", function () {
+  cy.get(cadastro.inputEmail).type(emailJaCadastrado);
 });
 
 When("não informo um nome", function () {});
 
-Then("aparece uma mensagem de erro dizendo {string}", function (mensagem) {
-  cy.contains("span", mensagem).should("exist");
-});
-
 When("não informo um email", function () {});
-
-Then("aparece um aviso dizendo {string}", function (mensagem) {
-  cy.contains("span", mensagem).should("exist");
-});
 
 When("não informo a senha", function () {
   cadastro.typeSenhaDeConfirmação();
@@ -144,15 +96,6 @@ When("não informo nenhuma senha", function () {
   cadastro.apertarCadastrar();
 });
 
-Then("aparecem dois avisos informando a necessidade de senha", function () {
-  cy.contains("span", "Informe a senha").should("exist");
-  expect(cadastro.inputError).to.have.length.at.least(2);
-});
-
-Then("aparece uma mensagem {string}", function (mensagem) {
-  cy.contains("span", mensagem).should("exist");
-});
-
 When("informo uma senha de 12 caracteres", function () {
   password = cadastro.typeSenha12Caracteres();
   cadastro.apertarCadastrar();
@@ -163,6 +106,81 @@ When("informo uma senha com mais de 13 caracteres", function () {
   cy.get(cadastro.inputSenha).type(novaSenha);
   cy.get(cadastro.inputConfirmarSenha).type(novaSenha);
   cadastro.apertarCadastrar();
+});
+
+When("informo uma senha com 5 caracteres", function () {
+  const senha5carcteres = "12345";
+  cy.get(cadastro.inputSenha).type(senha5carcteres);
+  cy.get(cadastro.inputConfirmarSenha).type(senha5carcteres);
+  cadastro.apertarCadastrar();
+});
+
+When("informo qualquer nome {string}", function (nomes) {
+  cy.get(cadastro.inputName).type(nomes);
+});
+
+When("informo um email inválido {string}", function (emailInvalido) {
+  cy.get(cadastro.inputEmail).type(emailInvalido);
+});
+
+When("informo um email com letras maiúsculas", function () {
+  cadastro.typeEmailMaiusculo();
+});
+
+Then("meu cadastro é criado com sucesso!", function () {
+  cy.wait("@criarUsuario").then(function (resposta) {
+    let objeto = resposta.response;
+    idNovoUsuario = resposta.response.body.id;
+    email = resposta.response.body.email;
+
+    expect(objeto.body.active).to.equal(true);
+    expect(objeto.body.type).to.equal(0);
+    expect(objeto.body.name).to.equal(nomeCadastrado);
+    expect(objeto.body.email).to.equal(emailCadastrado);
+
+    cy.contains("Sucesso").should("be.visible");
+    cy.contains("Cadastro realizado!").should("be.visible");
+  });
+});
+
+Then("meu cadastro é criado com sucesso", function () {
+  cy.wait("@criarUsuario").then(function (resposta) {
+    let objeto = resposta.response;
+    idNovoUsuario = resposta.response.body.id;
+    email = resposta.response.body.email;
+
+    expect(objeto.body.active).to.equal(true);
+    expect(objeto.body.type).to.equal(0);
+
+    cy.contains("Sucesso").should("be.visible");
+    cy.contains("Cadastro realizado!").should("be.visible");
+  });
+});
+
+Then("meu cadastro não é criado", function () {
+  cy.wait("@criarUsuario").then(function () {
+    cy.contains("Falha no cadastro.").should("be.visible");
+    cy.contains("E-mail já cadastrado. Utilize outro e-mail").should(
+      "be.visible"
+    );
+  });
+});
+
+Then("aparece uma mensagem de erro dizendo {string}", function (mensagem) {
+  cy.contains("span", mensagem).should("exist");
+});
+
+Then("aparece um aviso dizendo {string}", function (mensagem) {
+  cy.contains("span", mensagem).should("exist");
+});
+
+Then("aparecem dois avisos informando a necessidade de senha", function () {
+  cy.contains("span", "Informe a senha").should("exist");
+  expect(cadastro.inputError).to.have.length.at.least(2);
+});
+
+Then("aparece uma mensagem {string}", function (mensagem) {
+  cy.contains("span", mensagem).should("exist");
 });
 
 Then("o cadastro não é criado", function () {
@@ -186,23 +204,8 @@ Then("meu usuário cadastrado é do tipo 0", function () {
   });
 });
 
-When("informo uma senha com 5 caracteres", function () {
-  const senha5carcteres = "12345";
-  cy.get(cadastro.inputSenha).type(senha5carcteres);
-  cy.get(cadastro.inputConfirmarSenha).type(senha5carcteres);
-  cadastro.apertarCadastrar();
-});
-
 Then("aparece um aviso dizendo que {string}", function (mensagem) {
   cy.contains("span", mensagem).should("exist");
-});
-
-When("informo qualquer nome {string}", function (nomes) {
-  cy.get(cadastro.inputName).type(nomes);
-});
-
-When("informo um email inválido {string}", function (emailInvalido) {
-  cy.get(cadastro.inputEmail).type(emailInvalido);
 });
 
 Then(
@@ -214,7 +217,3 @@ Then(
     });
   }
 );
-
-When("informo um email com letras maiúsculas", function () {
-  cadastro.typeEmailMaiusculo();
-});
